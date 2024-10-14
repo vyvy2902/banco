@@ -3,10 +3,12 @@ package br.uespi.viniciusdias.banco.service;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
 import br.uespi.viniciusdias.banco.infrastructure.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;

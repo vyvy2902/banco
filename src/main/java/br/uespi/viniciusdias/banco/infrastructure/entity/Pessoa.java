@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 
@@ -35,4 +34,11 @@ public class Pessoa {
         inverseJoinColumns = @JoinColumn(name = "conta_id")
     )
     private List<Conta> contas;
+
+    public Pessoa(String nome, String cpf, String email, String senha) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
+    }
 }
