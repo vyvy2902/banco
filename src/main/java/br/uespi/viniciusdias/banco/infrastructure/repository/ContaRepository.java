@@ -1,4 +1,4 @@
-package infrastructure.repository;
+package br.uespi.viniciusdias.banco.infrastructure.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

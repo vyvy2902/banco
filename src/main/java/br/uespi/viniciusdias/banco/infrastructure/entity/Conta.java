@@ -1,4 +1,4 @@
-package infrastructure.entity;
+package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -25,4 +24,11 @@ public class Conta {
     private BigDecimal saldo;
     @ManyToMany(mappedBy = "contas")
     private List<Pessoa> donosConta;
+
+    public Conta(Long id, String numeroConta, List<Pessoa> donosConta) {
+        this.id = id;
+        this.numeroConta = numeroConta;
+        this.donosConta = donosConta;
+        saldo = BigDecimal.valueOf(0);
+    }
 }

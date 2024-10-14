@@ -1,6 +1,6 @@
-package infrastructure.repository;
+package br.uespi.viniciusdias.banco.infrastructure.repository;
 
-import infrastructure.entity.Pessoa;
+import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {

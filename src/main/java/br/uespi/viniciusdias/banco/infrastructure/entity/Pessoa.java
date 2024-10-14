@@ -1,4 +1,4 @@
-package infrastructure.entity;
+package br.uespi.viniciusdias.banco.infrastructure.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
