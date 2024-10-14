@@ -22,11 +22,15 @@ public class Conta {
     private String numeroConta;
     @Column(nullable = false)
     private BigDecimal saldo;
-    @ManyToMany(mappedBy = "contas")
+    @ManyToMany
+    @JoinTable(
+            name = "pessoa_conta",
+            joinColumns = @JoinColumn(name = "pessoa_id"),
+            inverseJoinColumns = @JoinColumn(name = "conta_id")
+    )
     private List<Pessoa> donosConta;
 
-    public Conta(Long id, String numeroConta, List<Pessoa> donosConta) {
-        this.id = id;
+    public Conta(String numeroConta, List<Pessoa> donosConta) {
         this.numeroConta = numeroConta;
         this.donosConta = donosConta;
         saldo = BigDecimal.valueOf(0);

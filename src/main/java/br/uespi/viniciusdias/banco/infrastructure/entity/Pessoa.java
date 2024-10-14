@@ -27,12 +27,7 @@ public class Pessoa {
     @Column(nullable = false)
     private String senha;
 
-    @ManyToMany
-    @JoinTable(
-        name = "pessoa_conta",
-        joinColumns = @JoinColumn(name = "pessoa_id"),
-        inverseJoinColumns = @JoinColumn(name = "conta_id")
-    )
+    @ManyToMany(mappedBy = "donosConta")
     private List<Conta> contas;
 
     public Pessoa(String nome, String cpf, String email, String senha) {

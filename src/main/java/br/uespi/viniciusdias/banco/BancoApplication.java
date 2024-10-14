@@ -1,12 +1,15 @@
 package br.uespi.viniciusdias.banco;
 
+import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
+import br.uespi.viniciusdias.banco.service.ContaService;
 import br.uespi.viniciusdias.banco.service.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,6 +19,8 @@ public class BancoApplication implements CommandLineRunner {
 	Scanner scanner = new Scanner(System.in);
 	@Autowired
 	private PessoaService pessoaService;
+	@Autowired
+	private ContaService contaService;
 	private final String logo = """
             
              .----------------.  .----------------.  .-----------------. .----------------.  .----------------.\s
@@ -84,25 +89,36 @@ public class BancoApplication implements CommandLineRunner {
 		return pessoaService.salvar(pessoa);
 	}
 
-	private void criarPessoas(int numeroPessoas) {
+	private ArrayList<Pessoa> criarPessoas(int numeroPessoas) {
 
 		ArrayList<Pessoa> listaPessoas = new ArrayList<>();
 
 		for (int i = 0; i < numeroPessoas; i++) {
 			listaPessoas.add(criarPessoa());
 		}
+
+		return listaPessoas;
 	}
 
 	private void criarConta() {
-		System.out.println("Quantas pessoas serão donasd dessa conta?");
+		System.out.println("Quantas pessoas serão donas dessa conta?");
 		int numeroPessoas = scanner.nextInt();
-		if (numeroPessoas > 1) {
-			criarPessoas(numeroPessoas);
-		}else if (numeroPessoas == 1) {
-			criarPessoa();
-		}else {
-			System.out.println("Opção inválida");
-		}
+		scanner.nextLine();
+		ArrayList donosConta = criarPessoas(numeroPessoas);
+		Conta conta = new Conta(gerarNumeroConta(), donosConta);
+		contaService.salvar(conta);
 		inicializar();
+	}
+
+	private String gerarNumeroConta() {
+		SecureRandom random = new SecureRandom();
+		StringBuilder numeroConta = new StringBuilder();
+
+		for (int i = 0; i < 20; i++) {
+			int digito = random.nextInt(10);
+			numeroConta.append(digito);
+		}
+
+		return numeroConta.toString();
 	}
 }
