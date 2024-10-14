@@ -29,6 +29,8 @@ public class Conta {
             inverseJoinColumns = @JoinColumn(name = "conta_id")
     )
     private List<Pessoa> donosConta;
+    @ManyToMany(mappedBy = "contas")
+    private List<Transacao> transacoes;
 
     public Conta(String numeroConta, List<Pessoa> donosConta) {
         this.numeroConta = numeroConta;
