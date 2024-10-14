@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -68,7 +70,7 @@ public class BancoApplication implements CommandLineRunner {
 
 	}
 
-	private void criarConta() {
+	private Pessoa criarPessoa() {
 		System.out.println(dadosPessoa);
 		System.out.print("Nome: ");
 		String nome = scanner.nextLine();
@@ -78,9 +80,29 @@ public class BancoApplication implements CommandLineRunner {
 		String email = scanner.nextLine();
 		System.out.print("Senha: ");
 		String senha = scanner.nextLine();
-
 		Pessoa pessoa = new Pessoa(nome, cpf, email, senha);
-		pessoaService.salvar(pessoa);
+		return pessoaService.salvar(pessoa);
+	}
+
+	private void criarPessoas(int numeroPessoas) {
+
+		ArrayList<Pessoa> listaPessoas = new ArrayList<>();
+
+		for (int i = 0; i < numeroPessoas; i++) {
+			listaPessoas.add(criarPessoa());
+		}
+	}
+
+	private void criarConta() {
+		System.out.println("Quantas pessoas serão donasd dessa conta?");
+		int numeroPessoas = scanner.nextInt();
+		if (numeroPessoas > 1) {
+			criarPessoas(numeroPessoas);
+		}else if (numeroPessoas == 1) {
+			criarPessoa();
+		}else {
+			System.out.println("Opção inválida");
+		}
 		inicializar();
 	}
 }
