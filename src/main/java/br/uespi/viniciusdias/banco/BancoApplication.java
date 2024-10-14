@@ -3,6 +3,7 @@ package br.uespi.viniciusdias.banco;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
 import br.uespi.viniciusdias.banco.service.ContaService;
+import br.uespi.viniciusdias.banco.service.EmprestimoService;
 import br.uespi.viniciusdias.banco.service.PessoaService;
 import br.uespi.viniciusdias.banco.service.TransacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class BancoApplication implements CommandLineRunner {
 	private ContaService contaService;
 	@Autowired
 	private TransacaoService transacaoService;
+	@Autowired
+	private EmprestimoService emprestimoService;
+
 	private final String logo = """
             
              .----------------.  .----------------.  .-----------------. .----------------.  .----------------.\s
@@ -137,7 +141,8 @@ public class BancoApplication implements CommandLineRunner {
 			System.out.println("2 - Sacar");
 			System.out.println("3 - Cancelar conta");
 			System.out.println("4 - Efetuar transação");
-			System.out.println("5 - Sair");
+			System.out.println("5 - Pedir empréstimo");
+			System.out.println("6 - Sair");
 			int escolha = scanner.nextInt();
 			scanner.nextLine();
 			switch (escolha) {
@@ -172,6 +177,10 @@ public class BancoApplication implements CommandLineRunner {
 					}
 					break;
 				case 5:
+					System.out.println("Qual o valor do empréstimo?");
+					emprestimoService.solicitarEmprestimo(conta.getId(), new BigDecimal(scanner.nextLine()));
+					break;
+				case 6:
 					System.out.println("Adeus!");
 					continuarLoop = false;
 					break;

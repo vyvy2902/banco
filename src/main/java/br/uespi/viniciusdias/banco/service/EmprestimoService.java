@@ -33,6 +33,7 @@ public class EmprestimoService {
 
         conta.setSaldo(conta.getSaldo().add(valor));
 
+        System.out.println("Empréstimo realizado com sucesso, juros de 5% ao mês");
         emprestimoRepository.save(emprestimo);
         contaRepository.save(conta);
 
