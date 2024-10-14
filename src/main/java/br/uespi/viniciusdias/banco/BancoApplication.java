@@ -4,6 +4,7 @@ import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
 import br.uespi.viniciusdias.banco.service.ContaService;
 import br.uespi.viniciusdias.banco.service.PessoaService;
+import br.uespi.viniciusdias.banco.service.TransacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +24,8 @@ public class BancoApplication implements CommandLineRunner {
 	private PessoaService pessoaService;
 	@Autowired
 	private ContaService contaService;
+	@Autowired
+	private TransacaoService transacaoService;
 	private final String logo = """
             
              .----------------.  .----------------.  .-----------------. .----------------.  .----------------.\s
@@ -131,7 +134,8 @@ public class BancoApplication implements CommandLineRunner {
 			System.out.println("1 - Depositar");
 			System.out.println("2 - Sacar");
 			System.out.println("3 - Cancelar conta");
-			System.out.println("4 - Sair");
+			System.out.println("4 - Efetuar transação");
+			System.out.println("5 - Sair");
 			int escolha = scanner.nextInt();
 			scanner.nextLine();
 			switch (escolha) {
@@ -151,6 +155,21 @@ public class BancoApplication implements CommandLineRunner {
 					System.out.println("Conta deletada com sucesso");
 					break;
 				case 4:
+					System.out.println("Número da conta ao qual você deseja efetuar uma transação: ");
+					String numeroConta = scanner.nextLine();
+					Optional<Conta> contaOPT = contaService.buscarPorNumeroConta(numeroConta);
+					if (contaOPT.isPresent()) {
+						Conta contaTMP = contaOPT.get();
+						System.out.println("Valor a ser enviado para a conta destino");
+						String valorTransacao = scanner.nextLine();
+						System.out.println("Descrição da transação");
+						String descricaoTransacao = scanner.nextLine();
+						transacaoService.realizarTransacao(conta.getId(), contaTMP.getId(), new BigDecimal(valorTransacao), descricaoTransacao);
+					}else {
+						System.out.println("Conta inexistente");
+					}
+					break;
+				case 5:
 					System.out.println("Adeus!");
 					continuarLoop = false;
 					break;
@@ -158,6 +177,8 @@ public class BancoApplication implements CommandLineRunner {
 					System.out.print("Valor inválido");
 			}
 		}
+
+		inicializar();
 	}
 
 	private Pessoa criarPessoa() {
