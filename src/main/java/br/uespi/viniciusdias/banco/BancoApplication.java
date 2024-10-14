@@ -9,9 +9,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 @SpringBootApplication
@@ -66,13 +68,96 @@ public class BancoApplication implements CommandLineRunner {
 					criarConta();
 					break;
 				case 2:
-					System.out.println("Acessar conta");
+					acessarConta();
 					break;
 				case 3:
 					System.out.println("Opção inválida");
 			}
 		}while (opcao != 1 & opcao != 2);
 
+	}
+
+	private void criarConta() {
+		System.out.println("Quantas pessoas serão donas dessa conta?");
+		int numeroPessoas = scanner.nextInt();
+		scanner.nextLine();
+		ArrayList donosConta = criarPessoas(numeroPessoas);
+		Conta conta = new Conta(gerarNumeroConta(), donosConta);
+		contaService.salvar(conta);
+		inicializar();
+	}
+
+	private void acessarConta() {
+		Optional<Pessoa> pessoa;
+		while (true) {
+			System.out.print("Email:");
+			String email = scanner.nextLine();
+			System.out.print("Senha: ");
+			String senha = scanner.nextLine();
+			pessoa = pessoaService.autenticar(email, senha);
+
+			if (pessoa.isPresent()) {
+				break;
+			}else {
+				System.out.println("");
+			}
+		}
+
+		mostrarContasDisponiveis(pessoa.get());
+
+	}
+
+	public void mostrarContasDisponiveis(Pessoa pessoa) {
+		List<Conta> contas = contaService.buscarContasPorPessoa(pessoa);
+		System.out.println("Lista de contas");
+		int contador = 1;
+		for (Conta conta : contas) {
+			System.out.println(contador + "-" + conta.getNumeroConta());
+			contador++;
+		}
+		System.out.println("Qual conta você deseja acessar?");
+		int contaEscolhida = scanner.nextInt();
+		scanner.nextLine();
+		acessarConta(contas.get(contaEscolhida - 1));
+	}
+
+	public void acessarConta(Conta conta) {
+
+		boolean continuarLoop = true;
+
+		while(continuarLoop) {
+			System.out.println("Número da conta: " + conta.getNumeroConta());
+			System.out.println("Saldo: " + conta.getSaldo());
+			System.out.println("1 - Depositar");
+			System.out.println("2 - Sacar");
+			System.out.println("3 - Cancelar conta");
+			System.out.println("4 - Sair");
+			int escolha = scanner.nextInt();
+			scanner.nextLine();
+			switch (escolha) {
+				case 1:
+					System.out.println("Valor a ser depositado:");
+					String valorDepositado = scanner.nextLine();
+					conta = contaService.depositar(conta.getId(), new BigDecimal(valorDepositado));
+					break;
+				case 2:
+					System.out.println("Valor a ser sacado: ");
+					String valorSacado = scanner.nextLine();
+					conta = contaService.sacar(conta.getId(), new BigDecimal(valorSacado));
+					break;
+				case 3:
+					continuarLoop = false;
+					contaService.deletar(conta.getId());
+					System.out.println("Conta deletada com sucesso");
+					break;
+				case 4:
+					System.out.println("Adeus!");
+					continuarLoop = false;
+					break;
+				default:
+					System.out.print("Valor inválido");
+			}
+		}
 	}
 
 	private Pessoa criarPessoa() {
@@ -98,16 +183,6 @@ public class BancoApplication implements CommandLineRunner {
 		}
 
 		return listaPessoas;
-	}
-
-	private void criarConta() {
-		System.out.println("Quantas pessoas serão donas dessa conta?");
-		int numeroPessoas = scanner.nextInt();
-		scanner.nextLine();
-		ArrayList donosConta = criarPessoas(numeroPessoas);
-		Conta conta = new Conta(gerarNumeroConta(), donosConta);
-		contaService.salvar(conta);
-		inicializar();
 	}
 
 	private String gerarNumeroConta() {

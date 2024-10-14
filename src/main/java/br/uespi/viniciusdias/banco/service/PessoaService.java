@@ -68,4 +68,16 @@ public class PessoaService {
             return pessoaRepository.save(pessoaExistente);
         }).orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada para o ID: " + id));
     }
+
+    public Optional<Pessoa> autenticar(String email, String senha) {
+        Optional<Pessoa> pessoaOpt = pessoaRepository.findByEmail(email);
+
+        if (pessoaOpt.isPresent()) {
+            Pessoa pessoa = pessoaOpt.get();
+            if (pessoa.getSenha().equals(senha)) {
+                return Optional.of(pessoa); // Retorna a pessoa se a senha estiver correta
+            }
+        }
+        return Optional.empty(); // Retorna vazio se não encontrar ou a senha estiver incorreta
+    }
 }
