@@ -20,15 +20,17 @@ public class EmprestimoService {
     private EmprestimoRepository emprestimoRepository;
     @Autowired
     private ContaRepository contaRepository;
+
+    public List<Emprestimo> buscarEmprestimoPorConta(Conta conta) {
+        return emprestimoRepository.findByConta(conta);
+    }
+
+    public Optional<Emprestimo> buscarPorId(Long id) {
+        return emprestimoRepository.findById(id);
+    }
+
     @Transactional
-    public Emprestimo solicitarEmprestimo(Long contaId, BigDecimal valor) {
-        Optional<Conta> contaOpt = contaRepository.findById(contaId);
-        if (contaOpt.isEmpty()) {
-            throw new IllegalArgumentException("Conta não encontrada.");
-        }
-
-        Conta conta = contaOpt.get();
-
+    public Emprestimo solicitarEmprestimo(Conta conta, BigDecimal valor) {
         Emprestimo emprestimo = new Emprestimo(valor, LocalDate.now(), conta);
 
         conta.setSaldo(conta.getSaldo().add(valor));
@@ -38,6 +40,34 @@ public class EmprestimoService {
         contaRepository.save(conta);
 
         return emprestimo;
+    }
+
+    @Transactional
+    public void pagarEmprestimo(Long emprestimoId, Conta conta, BigDecimal valorPagamento) {
+        if (valorPagamento.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("O valor do pagamento deve ser positivo.");
+        }
+
+        Optional<Emprestimo> emprestimoOpt = emprestimoRepository.findById(emprestimoId);
+        if (emprestimoOpt.isEmpty()) {
+            throw new IllegalArgumentException("Empréstimo não encontrado.");
+        }
+
+        Emprestimo emprestimo = emprestimoOpt.get();
+
+        if (conta.getSaldo().compareTo(valorPagamento) < 0) {
+            throw new IllegalArgumentException("Saldo insuficiente para o pagamento.");
+        }
+
+        BigDecimal saldoDevedor = emprestimo.getValor().subtract(emprestimo.getValorPago());
+        if (valorPagamento.compareTo(saldoDevedor) > 0) {
+            throw new IllegalArgumentException("O valor do pagamento não pode exceder o saldo devedor.");
+        }
+
+        emprestimo.setValorPago(emprestimo.getValorPago().add(valorPagamento));
+        conta.setSaldo(conta.getSaldo().subtract(valorPagamento));
+
+        contaRepository.save(conta);
     }
 
     @Scheduled(cron = "0 0 1 * * ?")
@@ -50,5 +80,9 @@ public class EmprestimoService {
 
             contaRepository.save(conta);
         }
+    }
+
+    public void deletarEmprestimo(Long id) {
+        emprestimoRepository.deleteById(id);
     }
 }

@@ -23,6 +23,7 @@ public class Emprestimo {
     private LocalDate data;
     @Column(name = "taxa_juros")
     private static final BigDecimal TAXA_JUROS = BigDecimal.valueOf(0.05);
+    private BigDecimal valorPago;
     @ManyToOne
     private Conta conta;
 
@@ -30,9 +31,14 @@ public class Emprestimo {
         this.valor = valor;
         this.data = data;
         this.conta = conta;
+        valorPago = new BigDecimal(0);
     }
 
     public BigDecimal calcularJuros(int meses) {
         return valor.multiply(TAXA_JUROS).multiply(BigDecimal.valueOf(meses));
+    }
+
+    public int emprestimoQuitado() {
+        return valorPago.compareTo(valor);
     }
 }

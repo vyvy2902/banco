@@ -1,6 +1,7 @@
 package br.uespi.viniciusdias.banco;
 
 import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
+import br.uespi.viniciusdias.banco.infrastructure.entity.Emprestimo;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
 import br.uespi.viniciusdias.banco.service.ContaService;
 import br.uespi.viniciusdias.banco.service.EmprestimoService;
@@ -142,7 +143,8 @@ public class BancoApplication implements CommandLineRunner {
 			System.out.println("3 - Cancelar conta");
 			System.out.println("4 - Efetuar transação");
 			System.out.println("5 - Pedir empréstimo");
-			System.out.println("6 - Sair");
+			System.out.println("6 - Pagar empréstimo");
+			System.out.println("7 - Sair");
 			int escolha = scanner.nextInt();
 			scanner.nextLine();
 			switch (escolha) {
@@ -178,9 +180,37 @@ public class BancoApplication implements CommandLineRunner {
 					break;
 				case 5:
 					System.out.println("Qual o valor do empréstimo?");
-					emprestimoService.solicitarEmprestimo(conta.getId(), new BigDecimal(scanner.nextLine()));
+					Emprestimo emprestimo = emprestimoService.solicitarEmprestimo(conta, new BigDecimal(scanner.nextLine()));
+					emprestimo.getId();
 					break;
 				case 6:
+					List<Emprestimo> emprestimos = emprestimoService.buscarEmprestimoPorConta(conta);
+					if (emprestimos.isEmpty()) {
+						System.out.println("Nenhum emprestimo encontrado");
+					}else {
+						for (Emprestimo emprestimoTmp : emprestimos) {
+							System.out.println(emprestimoTmp.getId() + " - "  + emprestimoTmp.getValor() + " - " + emprestimoTmp.getValorPago());
+						}
+						System.out.println("Selecione o id do empréstimo que será pago");
+						long idEmprestimo = scanner.nextLong();
+						scanner.nextLine();
+						Optional<Emprestimo> emprestimoOptional = emprestimoService.buscarPorId(idEmprestimo);
+						Emprestimo emprestimoPago;
+						if (emprestimoOptional.isPresent()) {
+							emprestimoPago = emprestimoOptional.get();
+							System.out.println("Quanto você irá pagar?");
+							BigDecimal valorPagoEmprestimo = new BigDecimal(scanner.nextLine());
+							emprestimoService.pagarEmprestimo(emprestimoPago.getId(), conta, valorPagoEmprestimo);
+							if (emprestimoPago.getValor().compareTo(valorPagoEmprestimo) == 0) {
+								emprestimoService.deletarEmprestimo(emprestimoPago.getId());
+								System.out.println("Foi pago se pá");
+							}
+						}else {
+							System.out.println("Id inválido");
+						}
+					}
+					break;
+				case 7:
 					System.out.println("Adeus!");
 					continuarLoop = false;
 					break;
