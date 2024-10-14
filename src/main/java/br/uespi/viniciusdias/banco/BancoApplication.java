@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 @SpringBootApplication
+@EnableScheduling
 public class BancoApplication implements CommandLineRunner {
 	Scanner scanner = new Scanner(System.in);
 	@Autowired
