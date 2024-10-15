@@ -121,10 +121,16 @@ public class BancoApplication implements CommandLineRunner {
 		List<Conta> contas = contaService.buscarContasPorPessoa(pessoa);
 		System.out.println("Lista de contas");
 		int contador = 1;
-		for (Conta conta : contas) {
-			System.out.println(contador + "-" + conta.getNumeroConta());
-			contador++;
+		if (contas.isEmpty()) {
+			System.out.println("Nenhuma conta encontrada para essa pessoa");
+			inicializar();
+		}else {
+			for (Conta conta : contas) {
+				System.out.println(contador + "-" + conta.getNumeroConta());
+				contador++;
+			}
 		}
+
 		System.out.println("Qual conta você deseja acessar?");
 		int contaEscolhida = scanner.nextInt();
 		scanner.nextLine();
