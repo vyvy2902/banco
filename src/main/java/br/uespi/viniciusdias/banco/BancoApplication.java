@@ -131,6 +131,78 @@ public class BancoApplication implements CommandLineRunner {
 		acessarConta(contas.get(contaEscolhida - 1));
 	}
 
+	public Conta depositar(Conta conta) {
+		System.out.println("Valor a ser depositado:");
+		String valorDepositado = scanner.nextLine();
+		conta = contaService.depositar(conta.getId(), new BigDecimal(valorDepositado));
+		return conta;
+	}
+
+	public Conta sacar(Conta conta) {
+		System.out.println("Valor a ser sacado: ");
+		String valorSacado = scanner.nextLine();
+		conta = contaService.sacar(conta.getId(), new BigDecimal(valorSacado));
+		return conta;
+	}
+
+	public void cancelar(Conta conta) {
+		contaService.deletar(conta.getId());
+		System.out.println("Conta deletada com sucesso");
+	}
+
+	public Conta efetuarTransacao(Conta conta) {
+		System.out.println("Número da conta ao qual você deseja efetuar uma transação: ");
+		String numeroConta = scanner.nextLine();
+		Optional<Conta> contaOPT = contaService.buscarPorNumeroConta(numeroConta);
+		if (contaOPT.isPresent()) {
+			Conta contaTMP = contaOPT.get();
+			System.out.println("Valor a ser enviado para a conta destino");
+			String valorTransacao = scanner.nextLine();
+			System.out.println("Descrição da transação");
+			String descricaoTransacao = scanner.nextLine();
+			transacaoService.realizarTransacao(conta.getId(), contaTMP.getId(), new BigDecimal(valorTransacao), descricaoTransacao);
+		}else {
+			System.out.println("Conta inexistente");
+		}
+		return conta;
+	}
+
+	public Conta pedirEmprestimo(Conta conta) {
+		System.out.println("Qual o valor do empréstimo?");
+		Emprestimo emprestimo = emprestimoService.solicitarEmprestimo(conta, new BigDecimal(scanner.nextLine()));
+		return conta;
+	}
+
+	public Conta pagarEmprestimo(Conta conta) {
+		List<Emprestimo> emprestimos = emprestimoService.buscarEmprestimoPorConta(conta);
+		if (emprestimos.isEmpty()) {
+			System.out.println("Nenhum emprestimo encontrado");
+		}else {
+			for (Emprestimo emprestimoTmp : emprestimos) {
+				System.out.println(emprestimoTmp.getId() + " - "  + emprestimoTmp.getValor() + " - " + emprestimoTmp.getValorPago());
+			}
+			System.out.println("Selecione o id do empréstimo que será pago");
+			long idEmprestimo = scanner.nextLong();
+			scanner.nextLine();
+			Optional<Emprestimo> emprestimoOptional = emprestimoService.buscarPorId(idEmprestimo);
+			Emprestimo emprestimoPago;
+			if (emprestimoOptional.isPresent()) {
+				emprestimoPago = emprestimoOptional.get();
+				System.out.println("Quanto você irá pagar?");
+				BigDecimal valorPagoEmprestimo = new BigDecimal(scanner.nextLine());
+				emprestimoService.pagarEmprestimo(emprestimoPago.getId(), conta, valorPagoEmprestimo);
+				if (emprestimoPago.getValor().compareTo(valorPagoEmprestimo) == 0) {
+					emprestimoService.deletarEmprestimo(emprestimoPago.getId());
+					System.out.println("Foi pago se pá");
+				}
+			}else {
+				System.out.println("Id inválido");
+			}
+		}
+
+		return conta;
+	}
+
 	public void acessarConta(Conta conta) {
 
 		boolean continuarLoop = true;
@@ -149,66 +221,22 @@ public class BancoApplication implements CommandLineRunner {
 			scanner.nextLine();
 			switch (escolha) {
 				case 1:
-					System.out.println("Valor a ser depositado:");
-					String valorDepositado = scanner.nextLine();
-					conta = contaService.depositar(conta.getId(), new BigDecimal(valorDepositado));
+					conta = depositar(conta);
 					break;
 				case 2:
-					System.out.println("Valor a ser sacado: ");
-					String valorSacado = scanner.nextLine();
-					conta = contaService.sacar(conta.getId(), new BigDecimal(valorSacado));
+					conta = sacar(conta);
 					break;
 				case 3:
 					continuarLoop = false;
-					contaService.deletar(conta.getId());
-					System.out.println("Conta deletada com sucesso");
+					cancelar(conta);
 					break;
 				case 4:
-					System.out.println("Número da conta ao qual você deseja efetuar uma transação: ");
-					String numeroConta = scanner.nextLine();
-					Optional<Conta> contaOPT = contaService.buscarPorNumeroConta(numeroConta);
-					if (contaOPT.isPresent()) {
-						Conta contaTMP = contaOPT.get();
-						System.out.println("Valor a ser enviado para a conta destino");
-						String valorTransacao = scanner.nextLine();
-						System.out.println("Descrição da transação");
-						String descricaoTransacao = scanner.nextLine();
-						transacaoService.realizarTransacao(conta.getId(), contaTMP.getId(), new BigDecimal(valorTransacao), descricaoTransacao);
-					}else {
-						System.out.println("Conta inexistente");
-					}
-					break;
+					conta = efetuarTransacao(conta);
 				case 5:
-					System.out.println("Qual o valor do empréstimo?");
-					Emprestimo emprestimo = emprestimoService.solicitarEmprestimo(conta, new BigDecimal(scanner.nextLine()));
-					emprestimo.getId();
+					conta = pedirEmprestimo(conta);
 					break;
 				case 6:
-					List<Emprestimo> emprestimos = emprestimoService.buscarEmprestimoPorConta(conta);
-					if (emprestimos.isEmpty()) {
-						System.out.println("Nenhum emprestimo encontrado");
-					}else {
-						for (Emprestimo emprestimoTmp : emprestimos) {
-							System.out.println(emprestimoTmp.getId() + " - "  + emprestimoTmp.getValor() + " - " + emprestimoTmp.getValorPago());
-						}
-						System.out.println("Selecione o id do empréstimo que será pago");
-						long idEmprestimo = scanner.nextLong();
-						scanner.nextLine();
-						Optional<Emprestimo> emprestimoOptional = emprestimoService.buscarPorId(idEmprestimo);
-						Emprestimo emprestimoPago;
-						if (emprestimoOptional.isPresent()) {
-							emprestimoPago = emprestimoOptional.get();
-							System.out.println("Quanto você irá pagar?");
-							BigDecimal valorPagoEmprestimo = new BigDecimal(scanner.nextLine());
-							emprestimoService.pagarEmprestimo(emprestimoPago.getId(), conta, valorPagoEmprestimo);
-							if (emprestimoPago.getValor().compareTo(valorPagoEmprestimo) == 0) {
-								emprestimoService.deletarEmprestimo(emprestimoPago.getId());
-								System.out.println("Foi pago se pá");
-							}
-						}else {
-							System.out.println("Id inválido");
-						}
-					}
+					conta = pagarEmprestimo(conta);
 					break;
 				case 7:
 					System.out.println("Adeus!");
