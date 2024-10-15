@@ -21,6 +21,7 @@
 ![Saque](prints/6.png)
 ## Empréstimo
 ![Emprestimo](prints/7.png)
+## Pagamento de empréstimo
+![Pagamento de empréstimo](prints/8.png)
 ## Transação
-![Transacao](prints/8.png)
-
+![Transacao](prints/9.png)
