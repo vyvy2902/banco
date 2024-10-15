@@ -48,11 +48,28 @@ public class BancoApplication implements CommandLineRunner {
              '----------------'  '----------------'  '----------------'  '----------------'  '----------------'\s
             """;
 	private final String dadosPessoa = """
-             _                          _               \s
-            | \\ _  _| _  _     _| _    |_) _  _  _  _  _\s
-            |_/(_|(_|(_)_>    (_|(_|   |  (/__> _> (_)(_|
-            
+			
+			 _____            _                 _                                        \s
+			|  __ \\          | |               | |                                       \s
+			| |  | | __ _  __| | ___  ___    __| | __ _   _ __   ___  ___ ___  ___   __ _\s
+			| |  | |/ _` |/ _` |/ _ \\/ __|  / _` |/ _` | | '_ \\ / _ \\/ __/ __|/ _ \\ / _` |
+			| |__| | (_| | (_| | (_) \\__ \\ | (_| | (_| | | |_) |  __/\\__ \\__ \\ (_) | (_| |
+			|_____/ \\__,_|\\__,_|\\___/|___/  \\__,_|\\__,_| | .__/ \\___||___/___/\\___/ \\__,_|
+			                                             | |                             \s
+			                                             |_|                             \s
+			
             """;
+	private final String contaBancaria = """
+			
+			   _____            _          ____                             _      \s
+			  / ____|          | |        |  _ \\                           (_)     \s
+			 | |     ___  _ __ | |_ __ _  | |_) | __ _ _ __   ___ __ _ _ __ _  __ _\s
+			 | |    / _ \\| '_ \\| __/ _` | |  _ < / _` | '_ \\ / __/ _` | '__| |/ _` |
+			 | |___| (_) | | | | || (_| | | |_) | (_| | | | | (_| (_| | |  | | (_| |
+			  \\_____\\___/|_| |_|\\__\\__,_| |____/ \\__,_|_| |_|\\___\\__,_|_|  |_|\\__,_|
+			                                                                       \s
+			                                                                       \s
+			""";
 	public static void main(String[] args) {
 		SpringApplication.run(BancoApplication.class, args);
 	}
@@ -214,6 +231,7 @@ public class BancoApplication implements CommandLineRunner {
 		boolean continuarLoop = true;
 
 		while(continuarLoop) {
+			System.out.println(contaBancaria);
 			System.out.println("Número da conta: " + conta.getNumeroConta());
 			System.out.println("Saldo: " + conta.getSaldo());
 			System.out.println("1 - Depositar");
@@ -238,6 +256,7 @@ public class BancoApplication implements CommandLineRunner {
 					break;
 				case 4:
 					conta = efetuarTransacao(conta);
+					break;
 				case 5:
 					conta = pedirEmprestimo(conta);
 					break;
