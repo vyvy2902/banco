@@ -274,8 +274,8 @@ public class BancoApplication implements CommandLineRunner {
 							List<Conta> contas = transacao.getContas();
 							System.out.println("Descrição: " + transacao.getDescricao());
 							System.out.println("Valor da transação: " + transacao.getValor());
-							System.out.println("Número da conta que efetuou a transação: " + contas.get(1).getNumeroConta());
-							System.out.println("Número da conta que recebeu a transação: " + contas.get(2).getNumeroConta());
+							System.out.println("Número da conta que efetuou a transação: " + contas.get(0).getNumeroConta());
+							System.out.println("Número da conta que recebeu a transação: " + contas.get(1).getNumeroConta());
 							System.out.println();
 						}
 						}
