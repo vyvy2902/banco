@@ -1,15 +1,11 @@
 package br.uespi.viniciusdias.banco;
 
 import br.uespi.viniciusdias.banco.controller.ContaController;
-import br.uespi.viniciusdias.banco.controller.EmprestimoController;
-import br.uespi.viniciusdias.banco.controller.PessoaController;
-import br.uespi.viniciusdias.banco.controller.TransacaoController;
+
 import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
 import br.uespi.viniciusdias.banco.service.ContaService;
-import br.uespi.viniciusdias.banco.service.EmprestimoService;
-import br.uespi.viniciusdias.banco.service.PessoaService;
-import br.uespi.viniciusdias.banco.service.TransacaoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,21 +21,9 @@ import java.util.Scanner;
 public class BancoApplication implements CommandLineRunner {
 	Scanner scanner = new Scanner(System.in);
 	@Autowired
-	private PessoaService pessoaService;
-	@Autowired
 	private ContaService contaService;
 	@Autowired
-	private TransacaoService transacaoService;
-	@Autowired
-	private EmprestimoService emprestimoService;
-	@Autowired
 	private ContaController contaController;
-	@Autowired
-	private TransacaoController transacaoController;
-	@Autowired
-	EmprestimoController emprestimoController;
-	@Autowired
-	PessoaController pessoaController;
 
 	private final String logo = """
             
@@ -84,7 +68,7 @@ public class BancoApplication implements CommandLineRunner {
 					break;
 				case 2:
 					Pessoa pessoa = contaController.acessarConta();
-					Boolean contaEncontrada = contaController.mostrarContasDisponiveis(pessoa);
+					boolean contaEncontrada = contaController.mostrarContasDisponiveis(pessoa);
 					if (!contaEncontrada) {
 						inicializar();
 					}else {
