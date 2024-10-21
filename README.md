@@ -25,3 +25,5 @@
 ![Pagamento de empréstimo](prints/8.png)
 ## Transação
 ![Transacao](prints/9.png)
+## Histórico de transações
+![Transacao](prints/10.png)
