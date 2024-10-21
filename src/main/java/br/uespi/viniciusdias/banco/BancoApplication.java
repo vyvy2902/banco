@@ -3,6 +3,7 @@ package br.uespi.viniciusdias.banco;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Conta;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Emprestimo;
 import br.uespi.viniciusdias.banco.infrastructure.entity.Pessoa;
+import br.uespi.viniciusdias.banco.infrastructure.entity.Transacao;
 import br.uespi.viniciusdias.banco.service.ContaService;
 import br.uespi.viniciusdias.banco.service.EmprestimoService;
 import br.uespi.viniciusdias.banco.service.PessoaService;
@@ -265,7 +266,19 @@ public class BancoApplication implements CommandLineRunner {
 					conta = pagarEmprestimo(conta);
 					break;
 				case 7:
-					conta = pagarEmprestimo(conta);
+					List<Transacao> transacoes = transacaoService.buscarTransacoesPorConta(conta);
+					if (transacoes.isEmpty()) {
+						System.out.println("Nenhuma transação encontrada");
+					}else {
+						for (Transacao transacao : transacoes) {
+							List<Conta> contas = transacao.getContas();
+							System.out.println("Descrição: " + transacao.getDescricao());
+							System.out.println("Valor da transação: " + transacao.getValor());
+							System.out.println("Número da conta que efetuou a transação: " + contas.get(1).getNumeroConta());
+							System.out.println("Número da conta que recebeu a transação: " + contas.get(2).getNumeroConta());
+							System.out.println();
+						}
+						}
 					break;
 				case 8:
 					System.out.println("Adeus!");
