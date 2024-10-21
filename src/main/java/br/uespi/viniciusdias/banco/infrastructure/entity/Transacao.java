@@ -20,7 +20,7 @@ public class Transacao {
     private BigDecimal valor;
     @Column(nullable = false, length = 100)
     private String descricao;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "transacao_conta",
             joinColumns = @JoinColumn(name = "transacao_id"),
