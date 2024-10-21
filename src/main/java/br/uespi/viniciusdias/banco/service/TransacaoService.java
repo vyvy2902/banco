@@ -22,17 +22,7 @@ public class TransacaoService {
     private ContaRepository contaRepository;
 
     @Transactional
-    public Transacao realizarTransacao(Long contaOrigemId, Long contaDestinoId, BigDecimal valor, String descricao) {
-        Optional<Conta> contaOrigemOpt = contaRepository.findById(contaOrigemId);
-        Optional<Conta> contaDestinoOpt = contaRepository.findById(contaDestinoId);
-
-        if (contaOrigemOpt.isEmpty() || contaDestinoOpt.isEmpty()) {
-            throw new IllegalArgumentException("Uma ou ambas as contas não existem.");
-        }
-
-        Conta contaOrigem = contaOrigemOpt.get();
-        Conta contaDestino = contaDestinoOpt.get();
-
+    public Transacao realizarTransacao(Conta contaOrigem, Conta contaDestino, BigDecimal valor, String descricao) {
         if (contaOrigem.getSaldo().compareTo(valor) < 0) {
             throw new IllegalArgumentException("Saldo insuficiente na conta de origem.");
         }

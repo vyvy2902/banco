@@ -185,7 +185,7 @@ public class BancoApplication implements CommandLineRunner {
 			String valorTransacao = scanner.nextLine();
 			System.out.println("Descrição da transação");
 			String descricaoTransacao = scanner.nextLine();
-			transacaoService.realizarTransacao(conta.getId(), contaTMP.getId(), new BigDecimal(valorTransacao), descricaoTransacao);
+			transacaoService.realizarTransacao(conta, contaTMP, new BigDecimal(valorTransacao), descricaoTransacao);
 		}else {
 			System.out.println("Conta inexistente");
 		}
