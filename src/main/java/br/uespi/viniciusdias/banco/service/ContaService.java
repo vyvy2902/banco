@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,6 +73,22 @@ public class ContaService {
             throw new IllegalArgumentException("Conta não encontrada.");
         }
 
+    }
+
+    public String gerarNumeroConta() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder numeroConta = new StringBuilder();
+
+        for (int i = 0; i < 20; i++) {
+            int digito = random.nextInt(10);
+            numeroConta.append(digito);
+        }
+
+        Optional<Conta> conta = buscarPorNumeroConta(numeroConta.toString());
+        if (conta.isPresent()) {
+            gerarNumeroConta();
+        }
+        return numeroConta.toString();
     }
 
 }
