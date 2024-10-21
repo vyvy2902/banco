@@ -119,7 +119,7 @@ public class BancoApplication implements CommandLineRunner {
 	private void acessarConta() {
 		Optional<Pessoa> pessoa;
 		while (true) {
-			System.out.print("Email:");
+			System.out.print("Email: ");
 			String email = scanner.nextLine();
 			System.out.print("Senha: ");
 			String senha = scanner.nextLine();
@@ -293,8 +293,8 @@ public class BancoApplication implements CommandLineRunner {
 				Conta contaDestino = contas.getLast();
 				System.out.println("Descrição: " + transacao.getDescricao());
 				System.out.println("Valor da transação: " + transacao.getValor());
-				System.out.println("Número da conta que efetuou a transação: " + contaOrigem);
-				System.out.println("Número da conta que recebeu a transação: " + contaDestino);
+				System.out.println("Conta origem: " + contaOrigem.getNumeroConta());
+				System.out.println("Conta destino: " + contaDestino.getNumeroConta());
 				System.out.println();
 			}
 		}
