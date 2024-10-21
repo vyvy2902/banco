@@ -240,7 +240,8 @@ public class BancoApplication implements CommandLineRunner {
 			System.out.println("4 - Efetuar transação");
 			System.out.println("5 - Pedir empréstimo");
 			System.out.println("6 - Pagar empréstimo");
-			System.out.println("7 - Sair");
+			System.out.println("7 - Histórico de transações");
+			System.out.println("8 - Sair");
 			int escolha = scanner.nextInt();
 			scanner.nextLine();
 			switch (escolha) {
@@ -264,6 +265,9 @@ public class BancoApplication implements CommandLineRunner {
 					conta = pagarEmprestimo(conta);
 					break;
 				case 7:
+					conta = pagarEmprestimo(conta);
+					break;
+				case 8:
 					System.out.println("Adeus!");
 					continuarLoop = false;
 					break;

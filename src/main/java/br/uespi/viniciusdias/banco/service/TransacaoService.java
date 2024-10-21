@@ -49,4 +49,8 @@ public class TransacaoService {
 
         return transacao;
     }
+
+    public List<Transacao> buscarTransacoesPorConta(Conta conta) {
+        return transacaoRepository.findByContas(conta);
+    }
 }
