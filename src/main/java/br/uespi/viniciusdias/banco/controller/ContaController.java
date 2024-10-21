@@ -32,4 +32,9 @@ public class ContaController {
         conta = contaService.sacar(conta.getId(), new BigDecimal(valorSacado));
         return conta;
     }
+
+    public void cancelar(Conta conta) {
+        contaService.deletar(conta.getId());
+        System.out.println("Conta deletada com sucesso");
+    }
 }

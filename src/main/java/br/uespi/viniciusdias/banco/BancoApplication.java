@@ -157,11 +157,6 @@ public class BancoApplication implements CommandLineRunner {
 		acessarConta(contas.get(contaEscolhida - 1));
 	}
 
-	public void cancelar(Conta conta) {
-		contaService.deletar(conta.getId());
-		System.out.println("Conta deletada com sucesso");
-	}
-
 	public Conta efetuarTransacao(Conta conta) {
 		System.out.println("Número da conta ao qual você deseja efetuar uma transação: ");
 		String numeroConta = scanner.nextLine();
@@ -242,7 +237,7 @@ public class BancoApplication implements CommandLineRunner {
 					break;
 				case 3:
 					continuarLoop = false;
-					cancelar(conta);
+					contaController.cancelar(conta);
 					break;
 				case 4:
 					conta = efetuarTransacao(conta);
